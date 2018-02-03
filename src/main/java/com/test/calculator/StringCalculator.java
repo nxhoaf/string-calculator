@@ -12,10 +12,10 @@ public class StringCalculator {
             return 0;
         }
 
-        if (NumberUtils.isCreatable(numbers)) {
-            return Integer.valueOf(numbers);
+        if (!NumberUtils.isCreatable(numbers)) {
+            throw new IllegalArgumentException("Not a valid number: " + numbers);
         }
-        
-        return -1;
+
+        return Integer.valueOf(numbers);
     }
 }
