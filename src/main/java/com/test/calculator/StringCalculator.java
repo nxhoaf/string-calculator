@@ -3,7 +3,9 @@ package com.test.calculator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -14,8 +16,8 @@ import java.util.stream.Stream;
 public class StringCalculator {
     private static final String DEFAULT_DELIMITER = ",";
     private static final String DELIMITER_SECTION = "//";
-    private static final String START_DELIMITER = "[";
-    private static final String END_DELIMITER = "]";
+    private static final char START_DELIMITER = '[';
+    private static final char END_DELIMITER = ']';
     private static final int MAX_SUPPORTED_NUMBER = 1000;
     
     public int add(String numbers) {
@@ -23,15 +25,15 @@ public class StringCalculator {
             return 0;
         }
         
-        String delimiter = DEFAULT_DELIMITER;
+        List<String> delimiters = Collections.singletonList(DEFAULT_DELIMITER);
         String content = numbers;
         if (numbers.contains(DELIMITER_SECTION)) {
-            delimiter = getDelimiter(numbers);
+            delimiters = getDelimiter(numbers);
             content = getContent(numbers);
         }
         
-        ensureInputCorrect(content, delimiter);
-        String[] numberStr = splitBySeparator(content, delimiter);
+        ensureInputCorrect(content, delimiters);
+        String[] numberStr = splitBySeparator(content, delimiters);
 
         return Stream.of(numberStr)
                 .map(StringUtils::trim)
@@ -41,8 +43,8 @@ public class StringCalculator {
     }
 
 
-    private void ensureInputCorrect(String content, String delimiter) {
-        String[] numberStr = splitBySeparator(content, delimiter);
+    private void ensureInputCorrect(String content, List<String> delimiters) {
+        String[] numberStr = splitBySeparator(content, delimiters);
         
         if (isContainInvalidNumber(numberStr)) {
             throw new IllegalArgumentException("Not a valid number: " + content);
@@ -66,26 +68,46 @@ public class StringCalculator {
                 : numbers.substring(endFirstLineIndex + 1);
     }
 
-    private String getDelimiter(String numbers) {
+    private List<String> getDelimiter(String numbers) {
         int endFirstLineIndex = numbers.indexOf("\n");
         if (endFirstLineIndex == -1) {
-            return DEFAULT_DELIMITER;
+            return Collections.singletonList(DEFAULT_DELIMITER);
         }
-        String delimiterPart = numbers.substring(0, endFirstLineIndex);
-        return delimiterPart.replace(DELIMITER_SECTION, "")
-                .replace(START_DELIMITER, "")
-                .replace(END_DELIMITER, "");
+        
+        String delimiterPart = numbers.substring(0, endFirstLineIndex)
+                .replace(DELIMITER_SECTION, "");
+        if (!delimiterPart.contains(String.valueOf(START_DELIMITER))) {
+            return Collections.singletonList(delimiterPart);
+        }
+        
+        int beginDelim = 0;
+        int endDelim = 0;
+        List<String> delimiters = new ArrayList<>();
+        for (int i = 0; i < delimiterPart.length(); i++) {
+            if (delimiterPart.charAt(i) == START_DELIMITER) {
+                beginDelim = i + 1;
+            } 
+            
+            if (delimiterPart.charAt(i) == END_DELIMITER) {
+                endDelim = i;
+                delimiters.add(delimiterPart.substring(beginDelim, endDelim));
+            }
+        }
+        
+        return delimiters;
     }
 
-    private String[] splitBySeparator(String numbers, String delimiter) {
-        String numberWithoutNewline = numbers.replaceAll("\\r?\\n", delimiter);
+    private String[] splitBySeparator(String numbers, List<String> delimiters) {
+        for (String delimiter : delimiters) {
+            numbers = numbers.replace(delimiter, DEFAULT_DELIMITER);
+        }
+        
+        String numberWithoutNewline = numbers.replaceAll("\\r?\\n", DEFAULT_DELIMITER);
         if (numberWithoutNewline.contains(",,")) {
             throw new IllegalArgumentException("Two consecutive separators are invalid: " + numbers);
         }
         
-        return numberWithoutNewline
-                .replace(delimiter, DEFAULT_DELIMITER)
-                .split(DEFAULT_DELIMITER);
+        return numberWithoutNewline.split(DEFAULT_DELIMITER);
     }
 
     private boolean isContainInvalidNumber(String[] numbers) {
