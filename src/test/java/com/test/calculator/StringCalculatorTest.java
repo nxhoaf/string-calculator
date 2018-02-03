@@ -49,4 +49,13 @@ public class StringCalculatorTest {
     public void newLineCharacterShouldBeConsideredAsSeparator() {
         assertEquals(6, calculator.add("1\n2,3"));
     }
+    
+    @Test
+    public void twoConsectutiveSeparatorsAreInvalid() {
+        String numbers = "1,\n";
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Two consecutive Separator is invalid: " + numbers);
+        
+        calculator.add(numbers);
+    }
 }

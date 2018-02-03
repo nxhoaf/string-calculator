@@ -27,7 +27,7 @@ public class StringCalculator {
     }
 
     private String[] splitBySeparator(String numbers) {
-        return numbers.replace("," , "\n").split("\\r?\\n");
+        return numbers.replaceAll("\\r?\\n", ",").split(DEFAULT_SEPARATOR);
     }
 
     private boolean isContainInvalidNumber(String[] numbers) {
