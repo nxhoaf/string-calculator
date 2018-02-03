@@ -79,7 +79,7 @@ public class StringCalculatorTest {
         String number = "1,-2,3,-4,5";
         
         expectedException.expect(UnsupportedOperationException.class);
-        expectedException.expectMessage("Two consecutive separators are invalid: -2, -4");
+        expectedException.expectMessage("Negatives not allowed: [-2, -4]");
 
         calculator.add(number);
     }

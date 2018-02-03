@@ -3,6 +3,9 @@ package com.test.calculator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -38,6 +41,15 @@ public class StringCalculator {
         
         if (isContainInvalidNumber(numberStr)) {
             throw new IllegalArgumentException("Not a valid number: " + content);
+        }
+        
+        List<Integer> negativeNumbers = Stream.of(numberStr)
+                .map(Integer::valueOf)
+                .filter(number -> number < 0)
+                .collect(Collectors.toList());
+        
+        if (!negativeNumbers.isEmpty()) {
+            throw new UnsupportedOperationException("Negatives not allowed: " + negativeNumbers);
         }
     }
 
