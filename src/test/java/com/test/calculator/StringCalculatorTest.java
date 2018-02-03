@@ -93,4 +93,9 @@ public class StringCalculatorTest {
     public void delimitersOfAnyLengthShouldBeSupported() {
         assertEquals(6, calculator.add("//[***]\n1***2***3"));
     }
+    
+    @Test
+    public void multipleDelimitersShouldBeSupported() {
+        assertEquals(6, calculator.add("//[*][%]\n1*2%3"));
+    }
 }
