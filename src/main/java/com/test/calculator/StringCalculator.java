@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 public class StringCalculator {
     private static final String DEFAULT_DELIMITER = ",";
     private static final String DELIMITER_SECTION = "//";
+    private static final int MAX_SUPPORTED_NUMBER = 1000;
     
     public int add(String numbers) {
         if (StringUtils.isEmpty(numbers)) {
@@ -31,7 +32,9 @@ public class StringCalculator {
         String[] numberStr = splitBySeparator(content, delimiter);
 
         return Stream.of(numberStr)
+                .map(StringUtils::trim)
                 .map(Integer::valueOf)
+                .filter(number -> number < MAX_SUPPORTED_NUMBER)
                 .reduce(0, (n1, n2) -> n1 + n2);
     }
 
@@ -44,6 +47,7 @@ public class StringCalculator {
         }
         
         List<Integer> negativeNumbers = Stream.of(numberStr)
+                .map(StringUtils::trim)
                 .map(Integer::valueOf)
                 .filter(number -> number < 0)
                 .collect(Collectors.toList());
@@ -80,6 +84,7 @@ public class StringCalculator {
 
     private boolean isContainInvalidNumber(String[] numbers) {
         return Stream.of(numbers)
+                .map(StringUtils::trim)
                 .anyMatch(number -> !NumberUtils.isCreatable(number));
     }
 }
