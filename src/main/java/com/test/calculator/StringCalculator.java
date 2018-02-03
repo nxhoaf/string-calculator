@@ -76,25 +76,25 @@ public class StringCalculator {
         return delimiters;
     }
 
-
     private void ensureInputCorrect(String content, List<String> delimiters) {
-        List<String> numberStr = splitBySeparator(content, delimiters);
+        List<String> numbers = splitBySeparator(content, delimiters);
         
-        if (isContainInvalidNumber(numberStr)) {
+        if (isContainInvalidNumber(numbers)) {
             throw new IllegalArgumentException("Not a valid number: " + content);
         }
-        
-        List<Integer> negativeNumbers = numberStr.stream()
-                .map(Integer::valueOf)
-                .filter(number -> number < 0)
-                .collect(Collectors.toList());
-        
+
+        List<Integer> negativeNumbers = isContainNegativeNumbers(numbers);
         if (!negativeNumbers.isEmpty()) {
             throw new UnsupportedOperationException("Negatives not allowed: " + negativeNumbers);
         }
     }
 
-    
+    private List<Integer> isContainNegativeNumbers(List<String> numberStr) {
+        return numberStr.stream()
+                    .map(Integer::valueOf)
+                    .filter(number -> number < 0)
+                    .collect(Collectors.toList());
+    }
 
     private List<String> splitBySeparator(String numbers, List<String> delimiters) {
         for (String delimiter : delimiters) {
