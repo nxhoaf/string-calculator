@@ -37,8 +37,14 @@ public class StringCalculatorTest {
     }
     
     @Test
-    public void addTwoNumberWithCommaSeparatorShouldReturnCorrectValue() {
+    public void addTwoNumbersWithCommaSeparatorShouldReturnCorrectValue() {
         int result = calculator.add("1,2");
         assertEquals(3, result);
+    }
+    
+    @Test
+    public void addFiveNumbersShouldWork() {
+        int result = calculator.add("1,2,3,4,5");
+        assertEquals(15, result);
     }
 }

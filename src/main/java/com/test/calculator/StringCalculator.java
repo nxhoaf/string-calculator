@@ -9,12 +9,14 @@ import java.util.stream.Stream;
  * @author nxhoaf
  */
 public class StringCalculator {
+    private static final String DEFAULT_SEPARATOR = ",";
+    
     public int add(String numbers) {
         if (StringUtils.isEmpty(numbers)) {
             return 0;
         }
         
-        String[] numberStr = numbers.split(",");
+        String[] numberStr = numbers.split(DEFAULT_SEPARATOR);
         if (isContainInvalidNumber(numberStr)) {
             throw new IllegalArgumentException("Not a valid number: " + numbers);
         }
