@@ -24,14 +24,21 @@ public class StringCalculator {
             content = getContent(numbers);
         }
         
+        ensureInputCorrect(content, delimiter);
         String[] numberStr = splitBySeparator(content, delimiter);
-        if (isContainInvalidNumber(numberStr)) {
-            throw new IllegalArgumentException("Not a valid number: " + numbers);
-        }
-        
+
         return Stream.of(numberStr)
                 .map(Integer::valueOf)
                 .reduce(0, (n1, n2) -> n1 + n2);
+    }
+
+
+    private void ensureInputCorrect(String content, String delimiter) {
+        String[] numberStr = splitBySeparator(content, delimiter);
+        
+        if (isContainInvalidNumber(numberStr)) {
+            throw new IllegalArgumentException("Not a valid number: " + content);
+        }
     }
 
     private String getContent(String numbers) {

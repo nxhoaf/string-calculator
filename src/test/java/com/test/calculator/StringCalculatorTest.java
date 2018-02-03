@@ -1,5 +1,6 @@
 package com.test.calculator;
 
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -71,5 +72,15 @@ public class StringCalculatorTest {
     @Test
     public void addShouldSupportDifferentDelimiter() {
         assertEquals(3, calculator.add("//;\n1;2"));
+    }
+    
+    @Test
+    public void negativeNumbersAreNotSupported() {
+        String number = "1,-2,3,-4,5";
+        
+        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expectMessage("Two consecutive separators are invalid: -2, -4");
+
+        calculator.add(number);
     }
 }
