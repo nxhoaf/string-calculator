@@ -51,11 +51,20 @@ public class StringCalculatorTest {
     }
     
     @Test
-    public void twoConsectutiveSeparatorsAreInvalid() {
+    public void twoConsectutiveSeparatorsAreInvalid1() {
         String numbers = "1,\n";
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Two consecutive Separator is invalid: " + numbers);
+        expectedException.expectMessage("Two consecutive separators are invalid: " + numbers);
         
+        calculator.add(numbers);
+    }
+
+    @Test
+    public void twoConsectutiveSeparatorsAreInvalid2() {
+        String numbers = "1,\n,2,3";
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Two consecutive separators are invalid: " + numbers);
+
         calculator.add(numbers);
     }
 }

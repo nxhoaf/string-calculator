@@ -27,7 +27,12 @@ public class StringCalculator {
     }
 
     private String[] splitBySeparator(String numbers) {
-        return numbers.replaceAll("\\r?\\n", ",").split(DEFAULT_SEPARATOR);
+        String numberWithoutNewline = numbers.replaceAll("\\r?\\n", DEFAULT_SEPARATOR);
+        if (numberWithoutNewline.contains(",,")) {
+            throw new IllegalArgumentException("Two consecutive separators are invalid: " + numbers);
+        }
+        
+        return numberWithoutNewline.split(DEFAULT_SEPARATOR);
     }
 
     private boolean isContainInvalidNumber(String[] numbers) {
