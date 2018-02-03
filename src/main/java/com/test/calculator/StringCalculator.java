@@ -12,6 +12,10 @@ public class StringCalculator {
             return 0;
         }
 
+        if (NumberUtils.isCreatable(numbers)) {
+            return Integer.valueOf(numbers);
+        }
+        
         return -1;
     }
 }
