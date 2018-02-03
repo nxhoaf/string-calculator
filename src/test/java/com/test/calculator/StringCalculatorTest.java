@@ -35,4 +35,10 @@ public class StringCalculatorTest {
         expectedException.expectMessage("Not a valid number: " + number);
         calculator.add(number);
     }
+    
+    @Test
+    public void addTwoNumberWithCommaSeparatorShouldReturnCorrectValue() {
+        int result = calculator.add("1,2");
+        assertEquals(3, result);
+    }
 }

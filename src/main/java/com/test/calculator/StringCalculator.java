@@ -11,6 +11,7 @@ public class StringCalculator {
         if (StringUtils.isEmpty(numbers)) {
             return 0;
         }
+        
 
         if (!NumberUtils.isCreatable(numbers)) {
             throw new IllegalArgumentException("Not a valid number: " + numbers);
