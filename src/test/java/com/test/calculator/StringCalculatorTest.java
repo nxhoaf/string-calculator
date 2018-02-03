@@ -67,4 +67,9 @@ public class StringCalculatorTest {
 
         calculator.add(numbers);
     }
+    
+    @Test
+    public void addShouldSupportDifferentDelimiter() {
+        assertEquals(3, calculator.add("//;\n1;2"));
+    }
 }

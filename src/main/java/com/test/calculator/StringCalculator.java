@@ -9,14 +9,22 @@ import java.util.stream.Stream;
  * @author nxhoaf
  */
 public class StringCalculator {
-    private static final String DEFAULT_SEPARATOR = ",";
+    private static final String DEFAULT_DELIMITER = ",";
+    private static final String DELIMITER_SECTION = "//";
     
     public int add(String numbers) {
         if (StringUtils.isEmpty(numbers)) {
             return 0;
         }
         
-        String[] numberStr = splitBySeparator(numbers);
+        String delimiter = DEFAULT_DELIMITER;
+        String content = numbers;
+        if (numbers.contains(DELIMITER_SECTION)) {
+            delimiter = getDelimiter(numbers);
+            content = getContent(numbers);
+        }
+        
+        String[] numberStr = splitBySeparator(content, delimiter);
         if (isContainInvalidNumber(numberStr)) {
             throw new IllegalArgumentException("Not a valid number: " + numbers);
         }
@@ -26,13 +34,29 @@ public class StringCalculator {
                 .reduce(0, (n1, n2) -> n1 + n2);
     }
 
-    private String[] splitBySeparator(String numbers) {
-        String numberWithoutNewline = numbers.replaceAll("\\r?\\n", DEFAULT_SEPARATOR);
+    private String getContent(String numbers) {
+        int endFirstLineIndex = numbers.indexOf("\n");
+        return endFirstLineIndex == -1 
+                ? numbers
+                : numbers.substring(endFirstLineIndex + 1);
+    }
+
+    private String getDelimiter(String numbers) {
+        int endFirstLineIndex = numbers.indexOf("\n");
+        if (endFirstLineIndex == -1) {
+            return DEFAULT_DELIMITER;
+        }
+        String delimiterPart = numbers.substring(0, endFirstLineIndex);
+        return delimiterPart.replace(DELIMITER_SECTION, "");
+    }
+
+    private String[] splitBySeparator(String numbers, String delimiter) {
+        String numberWithoutNewline = numbers.replaceAll("\\r?\\n", delimiter);
         if (numberWithoutNewline.contains(",,")) {
             throw new IllegalArgumentException("Two consecutive separators are invalid: " + numbers);
         }
         
-        return numberWithoutNewline.split(DEFAULT_SEPARATOR);
+        return numberWithoutNewline.split(delimiter);
     }
 
     private boolean isContainInvalidNumber(String[] numbers) {
