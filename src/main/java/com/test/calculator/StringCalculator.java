@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author nxhoaf
@@ -106,13 +105,12 @@ public class StringCalculator {
         if (numberWithoutNewline.contains(",,")) {
             throw new IllegalArgumentException("Two consecutive separators are invalid: " + numbers);
         }
-        return Arrays.asList(numberWithoutNewline.split(DEFAULT_DELIMITER)).stream()
+        return Arrays.stream(numberWithoutNewline.split(DEFAULT_DELIMITER))
                 .map(StringUtils::trim)
                 .collect(Collectors.toList());
     }
 
     private boolean isContainInvalidNumber(List<String> numbers) {
-        return numbers.stream()
-                .anyMatch(number -> !NumberUtils.isCreatable(number));
+        return numbers.stream().anyMatch(number -> !NumberUtils.isCreatable(number));
     }
 }
