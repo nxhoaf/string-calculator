@@ -14,6 +14,8 @@ import java.util.stream.Stream;
 public class StringCalculator {
     private static final String DEFAULT_DELIMITER = ",";
     private static final String DELIMITER_SECTION = "//";
+    private static final String START_DELIMITER = "[";
+    private static final String END_DELIMITER = "]";
     private static final int MAX_SUPPORTED_NUMBER = 1000;
     
     public int add(String numbers) {
@@ -70,7 +72,9 @@ public class StringCalculator {
             return DEFAULT_DELIMITER;
         }
         String delimiterPart = numbers.substring(0, endFirstLineIndex);
-        return delimiterPart.replace(DELIMITER_SECTION, "");
+        return delimiterPart.replace(DELIMITER_SECTION, "")
+                .replace(START_DELIMITER, "")
+                .replace(END_DELIMITER, "");
     }
 
     private String[] splitBySeparator(String numbers, String delimiter) {
@@ -79,7 +83,9 @@ public class StringCalculator {
             throw new IllegalArgumentException("Two consecutive separators are invalid: " + numbers);
         }
         
-        return numberWithoutNewline.split(delimiter);
+        return numberWithoutNewline
+                .replace(delimiter, DEFAULT_DELIMITER)
+                .split(DEFAULT_DELIMITER);
     }
 
     private boolean isContainInvalidNumber(String[] numbers) {
