@@ -17,14 +17,12 @@ public class StringCalculatorTest {
 
     @Test 
     public void addWithEmptyStringShouldReturnZero() {
-        int result = calculator.add("");
-        assertEquals(0, result);
+        assertEquals(0, calculator.add(""));
     }
 
     @Test 
     public void addWithOneNumberShouldReturnItself() {
-        int result = calculator.add("1");
-        assertEquals(1, result);
+        assertEquals(1, calculator.add("1"));
     }
     
     @Test 
@@ -44,7 +42,11 @@ public class StringCalculatorTest {
     
     @Test
     public void addFiveNumbersShouldWork() {
-        int result = calculator.add("1,2,3,4,5");
-        assertEquals(15, result);
+        assertEquals(15, calculator.add("1,2,3,4,5"));
+    }
+    
+    @Test
+    public void newLineCharacterShouldBeConsideredAsSeparator() {
+        assertEquals(6, calculator.add("1\n2,3"));
     }
 }

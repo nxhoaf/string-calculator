@@ -16,7 +16,7 @@ public class StringCalculator {
             return 0;
         }
         
-        String[] numberStr = numbers.split(DEFAULT_SEPARATOR);
+        String[] numberStr = splitBySeparator(numbers);
         if (isContainInvalidNumber(numberStr)) {
             throw new IllegalArgumentException("Not a valid number: " + numbers);
         }
@@ -24,6 +24,10 @@ public class StringCalculator {
         return Stream.of(numberStr)
                 .map(Integer::valueOf)
                 .reduce(0, (n1, n2) -> n1 + n2);
+    }
+
+    private String[] splitBySeparator(String numbers) {
+        return numbers.replace("," , "\n").split("\\r?\\n");
     }
 
     private boolean isContainInvalidNumber(String[] numbers) {
