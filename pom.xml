@@ -14,8 +14,8 @@
         
         <!-- Unit test -->
         <junit.version>4.12</junit.version>
-
         <java.version>1.8</java.version>
+        <maven.surefire.version>2.19.1</maven.surefire.version>
     </properties>
     
     <dependencies>
@@ -25,6 +25,13 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
+        <!--  must be on the classpath to run jacoco coverage -->
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <classifier>runtime</classifier>
+            <version>0.7.8</version>
+        </dependency>
 
         <!-- Utils -->
         <dependency>
@@ -33,6 +40,92 @@
             <version>${commons.lang3.version}</version>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <!--mvn clean install -Pcoverage-->
+            <!---->
+            <!-- - Analyze the project with SonarQube using Maven:-->
+            <!--mvn sonar:sonar-->
+
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.6.0</version>
+                        <configuration>
+                            <source>${java.version}</source>
+                            <target>${java.version}</target>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <!--<version>2.12.2</version>-->
+                        <version>${maven.surefire.version}</version>
+                        <configuration>
+                            <!-- An empty element doesn't overwrite, so we use an interface here which no one will ever use -->
+                            <excludedGroups>java.io.Serializable</excludedGroups>
+                            <systemPropertyVariables>
+                                <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.7.8</version>
+                        <executions>
+                            <execution>
+                                <id>default-instrument</id>
+                                <goals>
+                                    <goal>instrument</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-restore-instrumented-classes</id>
+                                <goals>
+                                    <goal>restore-instrumented-classes</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-report</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-check</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <!--  implementation is needed only for Maven 2  -->
+                                        <rule implementation="org.jacoco.maven.RuleConfiguration">
+                                            <element>BUNDLE</element>
+                                            <limits>
+                                                <!--  implementation is needed only for Maven 2  -->
+                                                <limit implementation="org.jacoco.report.check.Limit">
+                                                    <counter>COMPLEXITY</counter>
+                                                    <value>COVEREDRATIO</value>
+                                                    <minimum>0.00</minimum>
+                                                </limit>
+                                            </limits>
+                                        </rule>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>

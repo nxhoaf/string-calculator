@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  */
 public class StringCalculator {
     private static final String DEFAULT_DELIMITER = ",";
+    private static final char NEW_LINE = '\n';
     private static final String DELIMITER_SECTION = "//";
     private static final char START_DELIMITER = '[';
     private static final char END_DELIMITER = ']';
@@ -41,18 +42,12 @@ public class StringCalculator {
     }
 
     private String getContent(String numbers) {
-        int endFirstLineIndex = numbers.indexOf("\n");
-        return endFirstLineIndex == -1
-                ? numbers
-                : numbers.substring(endFirstLineIndex + 1);
+        int endFirstLineIndex = numbers.indexOf(NEW_LINE);
+        return numbers.substring(endFirstLineIndex + 1);
     }
 
     private List<String> getDelimiter(String numbers) {
-        int endFirstLineIndex = numbers.indexOf("\n");
-        if (endFirstLineIndex == -1) {
-            return Collections.singletonList(DEFAULT_DELIMITER);
-        }
-
+        int endFirstLineIndex = numbers.indexOf(NEW_LINE);
         String delimiterPart = numbers.substring(0, endFirstLineIndex)
                 .replace(DELIMITER_SECTION, "");
         if (!delimiterPart.contains(String.valueOf(START_DELIMITER))) {
